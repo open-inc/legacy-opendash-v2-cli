@@ -18,7 +18,7 @@ call(async () => {
   program
     .version(pkg.version)
 
-    .command('init [template]', 'Initiate a new instance or widget.')
+    .command('init <template> <name>', 'Initiate a new instance or widget.')
     .command('build', 'Build an Instance or a Widget.')
     .command('serve [path]', 'Starts a dev server in the current directory and on the given port.')
 
