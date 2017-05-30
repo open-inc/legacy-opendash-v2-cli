@@ -183,7 +183,7 @@ call(async () => {
       }),
     ],
     resolveLoader: {
-      modules: [path.resolve(__dirname, '..', 'node_modules')],
+      modules: [path.resolve(__dirname, '..', 'node_modules'), cwd('node_modules')],
       extensions: ['.js', '.json'],
       mainFields: ['loader', 'main'],
     },
