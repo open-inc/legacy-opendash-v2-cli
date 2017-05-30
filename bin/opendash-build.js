@@ -84,17 +84,21 @@ call(async () => {
 
   if (questions.length > 0) Object.assign(options, await inquirer.prompt(questions));
 
+  options.dist = options.dist || 'dist';
+  options.index = options.index || 'app/index.html';
+  options.entry = options.entry || 'app/js/app.js';
+
   fs.writeJson(configPath, options, { spaces: 2 });
 
-  options = Object.assign(DEFAULTS, options);
+  options = Object.assign({}, DEFAULTS, options);
 
   const WEBPACK_CONFIG = {
     entry: {
-      app: cwd('app/js/app.js'),
+      app: cwd(options.entry),
     },
     output: {
       filename: '[name].js', // '[name].[chunkhash].js',
-      path: cwd('dist'),
+      path: cwd(options.dist),
     },
     module: {
       rules: [
@@ -170,8 +174,8 @@ call(async () => {
         },
       }),
       new HtmlWebpackPlugin({
-        filename: cwd('dist/index.html'),
-        template: cwd('app/index.html'),
+        filename: 'index.html',
+        template: cwd(options.index),
         inject: true,
         chunksSortMode: 'dependency',
         hash: false,
