@@ -21,6 +21,7 @@ call(async () => {
       name: 'template',
       message: 'Select a template:',
       choices: [
+        'instance',
         'widget',
       ],
     });
@@ -58,9 +59,9 @@ call(async () => {
   const email = options.email || program.authorEmail;
 
   const src = `https://api.github.com/repos/opendash-templates/${template}/tarball`;
-  const dest = cwd(name);
+  const dest = cwd(`opendash-${template}-${name}`);
 
-  console.log(`Starting download of widget template '${template}' into './${name}'...`);
+  console.log(`Starting download of template '${template}' into './opendash-${template}-${name}'...`);
 
   await download(src, dest, {
     extract: true,
@@ -73,7 +74,7 @@ call(async () => {
   console.log(`Download of '${template}' finished.`);
 
   replace({
-    regex: '{{ opendash-widget-name }}',
+    regex: '{{ opendash-template-name }}',
     replacement: name,
     paths: [dest],
     recursive: true,
@@ -81,7 +82,7 @@ call(async () => {
   });
 
   replace({
-    regex: '{{ opendash-widget-developer-name }}',
+    regex: '{{ opendash-template-maintainer-name }}',
     replacement: author,
     paths: [dest],
     recursive: true,
@@ -89,7 +90,7 @@ call(async () => {
   });
 
   replace({
-    regex: '{{ opendash-widget-developer-email }}',
+    regex: '{{ opendash-template-maintainer-email }}',
     replacement: email,
     paths: [dest],
     recursive: true,
