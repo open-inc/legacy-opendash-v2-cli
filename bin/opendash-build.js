@@ -154,7 +154,16 @@ call(async () => {
             },
           }],
         },
-
+        {
+          test: /\.(png|jpg|gif)$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+              },
+            },
+          ],
+        },
       ],
     },
     plugins: [
