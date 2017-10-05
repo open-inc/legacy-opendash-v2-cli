@@ -177,7 +177,7 @@ call(async () => {
         name: 'manifest',
       }),
       new ExtractTextPlugin({
-        filename: 'style.css',
+        filename: 'styles/[name].css',
       }),
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
