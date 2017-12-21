@@ -11,6 +11,7 @@ const pkgAssets = require('pkg-assets');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const autoprefixer = require('autoprefixer');
 
@@ -37,6 +38,7 @@ program
   .option('-w, --watch', 'Watch the source files for changes.')
   .option('-s, --serve', 'Serve the dist folder.')
   .option('-o, --open', 'Open browser if serve mode is on.')
+  .option('-m, --minify', 'Output will be minified.')
   .option('-p, --port <port>', 'Define a port, if serve mode is on. Default is 8080.')
   .option('--source-map <setting>', 'Define the source-map type, see webpack.js.org/configuration/devtool')
   .parse(process.argv);
@@ -52,6 +54,7 @@ const DEFAULTS = {
   watch: program.watch || false,
   serve: program.serve || false,
   clean: program.clean || false,
+  minify: program.minify || false,
   open: program.open || false,
   port: program.port || 8080,
   sourceMap: program.sourceMap || false,
@@ -220,6 +223,13 @@ call(async () => {
   if (options.watch) {
     console.log('Starting in watch-mode: Watching source code for changes.');
     WEBPACK_CONFIG.watch = true;
+  }
+
+  if (options.minify) {
+    console.log('Starting in minify-mode: Output will be minified.');
+    WEBPACK_CONFIG.plugins.push(new UglifyJsPlugin({
+      sourceMap: (options.sourceMap) ? true : false,
+    }));
   }
 
   if (options.serve) {
