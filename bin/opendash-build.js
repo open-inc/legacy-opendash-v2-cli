@@ -38,6 +38,7 @@ program
   .option('-s, --serve', 'Serve the dist folder.')
   .option('-o, --open', 'Open browser if serve mode is on.')
   .option('-p, --port <port>', 'Define a port, if serve mode is on. Default is 8080.')
+  .option('--source-map <setting>', 'Define the source-map type, see webpack.js.org/configuration/devtool')
   .parse(process.argv);
 
 // const config = {};
@@ -53,6 +54,7 @@ const DEFAULTS = {
   clean: program.clean || false,
   open: program.open || false,
   port: program.port || 8080,
+  sourceMap: program.sourceMap || false,
 };
 
 const configPath = cwd('.opendashrc.json');
@@ -202,6 +204,7 @@ call(async () => {
       extensions: ['.js', '.json'],
       mainFields: ['loader', 'main'],
     },
+    devtool: DEFAULTS.sourceMap,
     watch: false,
     watchOptions: {
       aggregateTimeout: 300,
