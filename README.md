@@ -1,31 +1,59 @@
 # opendash-cli
 
-Die open.DASH CLI soll die Entwicklung von open.DASH Anwendungen vereinfachen, indem sie bei der Erstellung und Build Prozesse von open.DASH Instanzen und Widgets hilft.
-
-Einige Prozesse die sonst manuel durchgeführt werden müssten, können über einfache Command Line Befehle abgekürzt werden.
+The open.DASH CLI will allow you to create a new open.DASH project on the fly by letting you initialize new instances easly and providing a build process.
 
 ## Features
 
-* Webserver mit einem Befehl starten
-* open.DASH Instanz Template herunterladen
-* open.DASH Instanz builden
-* open.DASH Widget Templates herunterladen
-* open.DASH Widgets builden
+* Download an open.DASH instance template
+* Download an open.DASH widget template
+* Build your open.DASH instance with a single command
 
 ## Installation / Update
 
-Vorraussetzung ist Node Version `^7.6.0` und entweder die aktuelle Version von NPM oder YARN.
+Node version `^7.6.0` is required, you should also have a current version of npm or yarn.
 
-`npm i -g opendash-cli` oder `yarn global add opendash-cli` in der CLI ausführen.
+Install by running `npm i -g opendash-cli` or `yarn global add opendash-cli` in your prefered command line.
 
-*Info: yarn ist etwas schneller, dafür wird NPM von Node vorinstalliert.*
+*Note: yarn is a bit fast but NPM is installed by default when installing node.*
 
-*Info: Die gleichen Befehle können benutzt werden um die Anwendung zu aktualisieren.*
+*Note: To update the CLI just run the same commands again.*
 
-## Anwendung
-
-Ausführliche Erklärung wird bald nachgereicht.
+## Usage
 
 ```
 $ opendash --help
 ```
+
+## Changes
+
+### 1.3
+
+**package:**
+
+- README is now written in English
+
+**opendash build:**
+
+- New flag: --source-map=<setting> which allows the generation of source maps.
+- New flag: --minify which will minify js output
+
+**opendash init:**
+
+- Official "instance" template will now ask more questions, which will allow the user to generate a more personalized instance.
+
+### 1.2
+
+**package:**
+
+- Added yarn support
+
+**opendash build:**
+
+- Fixed output path for file-loader
+- Fixed output path for stylesheets
+
+### 1.1
+
+**opendash build:**
+
+- Added support for webpack file-loader
