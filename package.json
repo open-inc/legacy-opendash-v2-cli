@@ -29,6 +29,7 @@
     "live-server": "1.X",
     "node-sass": "4.X",
     "optimize-css-assets-webpack-plugin": "3.X",
+    "ora": "^1.0.0",
     "pkg-assets": "0.X",
     "postcss-loader": "2.X",
     "replace": "0.X",
