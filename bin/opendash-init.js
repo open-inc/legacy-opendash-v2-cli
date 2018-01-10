@@ -232,7 +232,7 @@ function generateCustomTemplate(options, replace) {
 
   let widgetsPkg = '\n';
   let widgetsApp = 'const widgets = [\n';
-  let widgetsAppImport = '// none';
+  const widgetsAppImport = '// none';
 
   if (options.custom.uadapter) {
     if (options.custom.uadapter === 'local-storage') {
@@ -278,21 +278,9 @@ function generateCustomTemplate(options, replace) {
   }
 
   if (options.custom.widgets) {
-    options.custom.widgets.forEach(widget => {
+    options.custom.widgets.forEach((widget) => {
       widgets.push(`opendash-widget-${widget}`);
     });
-    
-    // if (options.custom.widgets.indexOf('kpi') >= 0) {
-    //   widgets.push('opendash-widget-kpi');
-    // }
-
-    // if (options.custom.widgets.indexOf('highcharts') >= 0) {
-    //   widgets.push('opendash-widget-highcharts-x');
-    // }
-
-    // if (options.custom.widgets.indexOf('d3') >= 0) {
-    //   widgets.push('opendash-widget-d3-x');
-    // }
   }
 
   widgets.forEach((w) => {

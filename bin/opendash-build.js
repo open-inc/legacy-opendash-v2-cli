@@ -228,7 +228,7 @@ call(async () => {
   if (options.minify) {
     console.log('Starting in minify-mode: Output will be minified.');
     WEBPACK_CONFIG.plugins.push(new UglifyJsPlugin({
-      sourceMap: (options.sourceMap) ? true : false,
+      sourceMap: (options.sourceMap) ? true : false, // eslint-disable-line
     }));
   }
 
