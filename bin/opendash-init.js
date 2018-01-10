@@ -242,7 +242,7 @@ function generateCustomTemplate(options, replace) {
     }
 
     if (options.custom.uadapter === 'parse') {
-      userAdapterPkg = `"@opendash/user-adapter-baasbox": "^1.0.0",`;
+      userAdapterPkg = `"@opendash/user-adapter-parse": "^1.0.0",`;
       userAdapterAppImport = `import userAdapter from '@opendash/user-adapter-parse';`;
       userAdapterApp += `instance.registerUserAdapter(userAdapter({\n`;
       userAdapterApp += `  url: '${options.custom['parse-url']}',\n`;
