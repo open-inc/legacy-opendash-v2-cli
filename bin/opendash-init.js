@@ -166,8 +166,8 @@ call(async () => {
       message: 'Which widgets do you want to import?',
       choices: [
         'kpi',
-        'highcharts',
-        'd3',
+        'highcharts-live',
+        'highcharts-multi',
       ],
     });
   }
@@ -236,7 +236,7 @@ function generateCustomTemplate(options, replace) {
 
   if (options.custom.uadapter) {
     if (options.custom.uadapter === 'local-storage') {
-      userAdapterPkg = `"@opendash/user-adapter-baasbox": "^2.0.0",`;
+      userAdapterPkg = `"@opendash/user-adapter-local": "^2.0.0",`;
       userAdapterAppImport = `import userAdapter from '@opendash/user-adapter-local';`;
       userAdapterApp = `instance.registerUserAdapter(userAdapter());`;
     }
@@ -278,21 +278,25 @@ function generateCustomTemplate(options, replace) {
   }
 
   if (options.custom.widgets) {
-    if (options.custom.widgets.indexOf('kpi') >= 0) {
-      widgets.push('opendash-widget-kpi');
-    }
+    options.custom.widgets.forEach(widget => {
+      widgets.push(`opendash-widget-${widget}`);
+    });
+    
+    // if (options.custom.widgets.indexOf('kpi') >= 0) {
+    //   widgets.push('opendash-widget-kpi');
+    // }
 
-    if (options.custom.widgets.indexOf('highcharts') >= 0) {
-      widgets.push('opendash-widget-highcharts-x');
-    }
+    // if (options.custom.widgets.indexOf('highcharts') >= 0) {
+    //   widgets.push('opendash-widget-highcharts-x');
+    // }
 
-    if (options.custom.widgets.indexOf('d3') >= 0) {
-      widgets.push('opendash-widget-d3-x');
-    }
+    // if (options.custom.widgets.indexOf('d3') >= 0) {
+    //   widgets.push('opendash-widget-d3-x');
+    // }
   }
 
   widgets.forEach((w) => {
-    widgetsPkg += `    "${w}": "^1.0.0",\n`;
+    widgetsPkg += `    "${w}": "https://api.github.com/repos/UniSiegenWiNeMe/${w}/tarball",\n`;
     widgetsApp += `  require('${w}').default,\n`;
   });
 
