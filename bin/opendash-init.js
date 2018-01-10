@@ -24,7 +24,6 @@ function isset(input) {
 }
 
 program
-  .option('--guided', 'Guided initialisation.')
   .option('--author-name <name>', 'Author name.')
   .option('--author-email <email>', 'Author email.')
   .parse(process.argv);
@@ -35,8 +34,6 @@ call(async () => {
    */
 
   console.log();
-
-  const isGuided = program.guided || false;
 
   let options = {};
   let questions = [];
@@ -91,7 +88,7 @@ call(async () => {
   options = Object.assign(options, await inquirer.prompt(questions));
   questions = [];
 
-  if (isGuided && options.template === 'instance') {
+  if (options.template === 'instance') {
     questions.push({
       type: 'list',
       name: 'uadapter',
@@ -215,7 +212,7 @@ call(async () => {
   replace('{{ opendash-template-maintainer-name }}', options.author);
   replace('{{ opendash-template-maintainer-email }}', options.email);
 
-  if (isGuided && options.template === 'instance') {
+  if (options.template === 'instance') {
     generateCustomTemplate(options, replace);  // eslint-disable-line
   }
 
