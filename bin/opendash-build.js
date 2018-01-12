@@ -24,9 +24,10 @@ function logPath(x) {
 
 function testJsFiles(x) {
   if (/\.js$/.test(x)) {
-    // if (/(node_modules)/.test(x) && !(/(opendash-widget)/.test(x))) {
-    //   return false;
-    // }
+    const pathRel = path.normalize(x).replace(cwd(''), '');
+    if (/(node_modules)/.test(x) && !(/node_modules[\/|\\]@?opendash[a-zA-Z0-9\-]*[\/|\\]/.test(pathRel))) { // eslint-disable-line
+      return false;
+    }
     return true;
   }
   return false;
