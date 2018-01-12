@@ -24,9 +24,9 @@ function logPath(x) {
 
 function testJsFiles(x) {
   if (/\.js$/.test(x)) {
-    if (/(node_modules)/.test(x) && !(/(opendash-widget)/.test(x))) {
-      return false;
-    }
+    // if (/(node_modules)/.test(x) && !(/(opendash-widget)/.test(x))) {
+    //   return false;
+    // }
     return true;
   }
   return false;
