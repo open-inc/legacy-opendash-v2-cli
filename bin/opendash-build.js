@@ -113,7 +113,16 @@ call(async () => {
           use: [{
             loader: 'babel-loader',
             options: {
-              presets: ['babel-preset-es2015', 'babel-preset-stage-2'].map(require.resolve),
+              presets: [
+                [
+                  require.resolve('babel-preset-es2015'),
+                  {
+                    modules: false
+                  },
+                ],
+                require.resolve('babel-preset-stage-2'),
+              ],
+              babelrc: false,
             },
           }],
         },
