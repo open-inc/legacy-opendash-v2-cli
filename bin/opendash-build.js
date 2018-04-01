@@ -100,7 +100,7 @@ call(async () => {
 
   const WEBPACK_CONFIG = {
     entry: {
-      app: cwd(options.entry),
+      app: [require.resolve('babel-polyfill'), cwd(options.entry)],
     },
     output: {
       filename: '[name].js', // '[name].[chunkhash].js',
@@ -115,12 +115,14 @@ call(async () => {
             options: {
               presets: [
                 [
-                  require.resolve('babel-preset-es2015'),
+                  require.resolve('babel-preset-env'),
                   {
-                    modules: false
+                    targets: {
+                      browsers: ['last 2 Chrome versions'],
+                    },
                   },
                 ],
-                require.resolve('babel-preset-stage-2'),
+                // require.resolve('babel-preset-stage-2'),
               ],
               babelrc: false,
             },

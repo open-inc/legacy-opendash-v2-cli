@@ -236,30 +236,30 @@ function generateCustomTemplate(options, replace) {
 
   if (options.custom.uadapter) {
     if (options.custom.uadapter === 'local-storage') {
-      userAdapterPkg = `"@opendash/user-adapter-local": "^2.0.0",`;
+      userAdapterPkg = `"@opendash/user-adapter-local": "^4.0.0",`;
       userAdapterAppImport = `import userAdapter from '@opendash/user-adapter-local';`;
-      userAdapterApp = `instance.registerUserAdapter(userAdapter());`;
+      userAdapterApp = `instance.registerUserAdapter(userAdapter);`;
     }
 
     if (options.custom.uadapter === 'parse') {
-      userAdapterPkg = `"@opendash/user-adapter-parse": "^1.0.0",`;
+      userAdapterPkg = `"@opendash/user-adapter-parse": "^4.0.0",`;
       userAdapterAppImport = `import userAdapter from '@opendash/user-adapter-parse';`;
-      userAdapterApp += `instance.registerUserAdapter(userAdapter({\n`;
+      userAdapterApp += `instance.registerUserAdapter(userAdapter, {\n`;
       userAdapterApp += `  url: '${options.custom['parse-url']}',\n`;
       userAdapterApp += `  collection: '${options.custom['parse-collection']}',\n`;
       userAdapterApp += `  applicationId: '${options.custom['parse-applicationId']}',\n`;
       userAdapterApp += `   // javaScriptKey: '${options.custom['parse-jskey']}',\n`;
-      userAdapterApp += `}));`;
+      userAdapterApp += `});`;
     }
 
     if (options.custom.uadapter === 'baasbox') {
-      userAdapterPkg = `"@opendash/user-adapter-baasbox": "^3.0.0",`;
+      userAdapterPkg = `"@opendash/user-adapter-baasbox": "^4.0.0",`;
       userAdapterAppImport = `import userAdapter from '@opendash/user-adapter-baasbox';`;
-      userAdapterApp += `instance.registerUserAdapter(userAdapter({\n`;
+      userAdapterApp += `instance.registerUserAdapter(userAdapter, {\n`;
       userAdapterApp += `  endpoint: '${options.custom['baasbox-endpoint']}',\n`;
       userAdapterApp += `  collection: '${options.custom['baasbox-collection']}',\n`;
       userAdapterApp += `  appCode: '${options.custom['baasbox-appCode']}',\n`;
-      userAdapterApp += `}));`;
+      userAdapterApp += `});`;
     }
   }
 
