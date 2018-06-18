@@ -42,6 +42,7 @@ program
   .option('-m, --minify', 'Output will be minified.')
   .option('-p, --port <port>', 'Define a port, if serve mode is on. Default is 8080.')
   .option('--source-map <setting>', 'Define the source-map type, see webpack.js.org/configuration/devtool')
+  .option('--public-path <url>', 'Set a public path, see webpack.js.org/concepts/output')
   .parse(process.argv);
 
 // const config = {};
@@ -59,6 +60,7 @@ const DEFAULTS = {
   open: program.open || false,
   port: program.port || 8080,
   sourceMap: program.sourceMap || false,
+  publicPath: program.publicPath || false,
 };
 
 const configPath = cwd('.opendashrc.json');
@@ -243,6 +245,13 @@ call(async () => {
       sourceMap: (options.sourceMap) ? true : false, // eslint-disable-line
     }));
   }
+
+  if (options.publicPath) {
+    console.log('Starting in public-path-mode: ...');
+    WEBPACK_CONFIG.output.publicPath = options.publicPath;
+  }
+
+  console.log(options);
 
   if (options.serve) {
     const serverOptions = {
