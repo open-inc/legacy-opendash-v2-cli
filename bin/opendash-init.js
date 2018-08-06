@@ -217,6 +217,12 @@ call(async () => {
   }
 
   spinner.succeed(`Initialization of '${options.name}' finished.`);
+
+  console.log();
+  console.log(`Next step:`);
+  console.log(`cd ./opendash-${options.template}-${options.name}`);
+  console.log(`npm install`);
+  console.log(`npm run dev`);
 });
 
 function generateCustomTemplate(options, replace) {
