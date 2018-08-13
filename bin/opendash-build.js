@@ -120,7 +120,10 @@ call(async () => {
                   require.resolve('babel-preset-env'),
                   {
                     targets: {
-                      browsers: ['last 2 Chrome versions'],
+                      browsers: [
+                        'last 2 Chrome versions',
+                        'ie >= 11',
+                      ],
                     },
                   },
                 ],
@@ -250,8 +253,6 @@ call(async () => {
     console.log('Starting in public-path-mode: ...');
     WEBPACK_CONFIG.output.publicPath = options.publicPath;
   }
-
-  console.log(options);
 
   if (options.serve) {
     const serverOptions = {
