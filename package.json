@@ -13,10 +13,11 @@
   "dependencies": {
     "autoprefixer": "^7.0.0",
     "babel-core": "^6.0.0",
-    "babel-preset-env": "^1.0.0",
-    "babel-polyfill": "^6.0.0",
     "babel-loader": "^7.0.0",
+    "babel-polyfill": "^6.0.0",
+    "babel-preset-env": "^1.0.0",
     "commander": "^2.0.0",
+    "copy-webpack-plugin": "^4.5.3",
     "css-loader": "0.X",
     "download": "^6.0.0",
     "extract-text-webpack-plugin": "^3.0.0",
@@ -39,7 +40,7 @@
     "webpack": "^3.0.0"
   },
   "scripts": {
-    "test": "eslint ./bin ./src"
+    "test": "eslint ./bin ./src --fix"
   },
   "bin": {
     "opendash": "./bin/opendash.js"

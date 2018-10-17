@@ -12,6 +12,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const autoprefixer = require('autoprefixer');
 
@@ -25,7 +26,11 @@ function logPath(x) {
 function testJsFiles(x) {
   if (/\.js$/.test(x)) {
     const pathRel = path.normalize(x).replace(cwd(''), '');
-    if (/(node_modules)/.test(x) && !(/node_modules[\/|\\]@?opendash[a-zA-Z0-9\-]*[\/|\\]/.test(pathRel))) { // eslint-disable-line
+    if (
+      /(node_modules)/.test(x) &&
+      !/node_modules[\/|\\]@?opendash[a-zA-Z0-9\-]*[\/|\\]/.test(pathRel)
+    ) {
+      // eslint-disable-line
       return false;
     }
     return true;
@@ -34,23 +39,29 @@ function testJsFiles(x) {
 }
 
 program
-  .option('-t, --type <type>', 'Either \'Module\' or \'Instance\'.')
+  .option('-t, --type <type>', "Either 'Module' or 'Instance'.")
   .option('-c, --clean', 'Clean old dist folder.')
   .option('-w, --watch', 'Watch the source files for changes.')
   .option('-s, --serve', 'Serve the dist folder.')
   .option('-o, --open', 'Open browser if serve mode is on.')
   .option('-m, --minify', 'Output will be minified.')
-  .option('-p, --port <port>', 'Define a port, if serve mode is on. Default is 8080.')
-  .option('--source-map <setting>', 'Define the source-map type, see webpack.js.org/configuration/devtool')
-  .option('--public-path <url>', 'Set a public path, see webpack.js.org/concepts/output')
+  .option(
+    '-p, --port <port>',
+    'Define a port, if serve mode is on. Default is 8080.',
+  )
+  .option(
+    '--source-map <setting>',
+    'Define the source-map type, see webpack.js.org/configuration/devtool',
+  )
+  .option(
+    '--public-path <url>',
+    'Set a public path, see webpack.js.org/concepts/output',
+  )
   .parse(process.argv);
 
 // const config = {};
 
-const TYPES = [
-  'Instance',
-  'Module',
-];
+const TYPES = ['Instance', 'Module'];
 
 const DEFAULTS = {
   watch: program.watch || false,
@@ -83,14 +94,11 @@ call(async () => {
       type: 'list',
       name: 'type',
       message: 'What do you want to build?',
-      choices: [
-        'Instance',
-        'Module',
-      ],
+      choices: ['Instance', 'Module'],
     });
   }
 
-  if (questions.length > 0) Object.assign(options, await inquirer.prompt(questions));
+  if (questions.length > 0) { Object.assign(options, await inquirer.prompt(questions)); }
 
   options.dist = options.dist || 'dist';
   options.index = options.index || 'app/index.html';
@@ -112,26 +120,25 @@ call(async () => {
       rules: [
         {
           test: testJsFiles,
-          use: [{
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                [
-                  require.resolve('babel-preset-env'),
-                  {
-                    targets: {
-                      browsers: [
-                        'last 2 Chrome versions',
-                        'ie >= 11',
-                      ],
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  [
+                    require.resolve('babel-preset-env'),
+                    {
+                      targets: {
+                        browsers: ['last 2 Chrome versions', 'ie >= 11'],
+                      },
                     },
-                  },
+                  ],
+                  // require.resolve('babel-preset-stage-2'),
                 ],
-                // require.resolve('babel-preset-stage-2'),
-              ],
-              babelrc: false,
+                babelrc: false,
+              },
             },
-          }],
+          ],
         },
         {
           test: /\.css$/,
@@ -152,32 +159,31 @@ call(async () => {
               {
                 loader: 'postcss-loader',
                 options: {
-                  plugins: () => [
-                    autoprefixer(),
-                  ],
+                  plugins: () => [autoprefixer()],
                 },
               },
               {
                 loader: 'sass-loader',
-                options: {
-                },
+                options: {},
               },
             ],
           }),
         },
         {
           test: /\.html$/,
-          use: [{
-            loader: 'html-loader',
-            options: {
-              minimize: true,
-              removeComments: true,
-              collapseWhitespace: true,
+          use: [
+            {
+              loader: 'html-loader',
+              options: {
+                minimize: true,
+                removeComments: true,
+                collapseWhitespace: true,
+              },
             },
-          }],
+          ],
         },
         {
-          test: /\.(png|jpg|gif)$/,
+          test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
           use: [
             {
               loader: 'file-loader',
@@ -193,13 +199,14 @@ call(async () => {
     plugins: [
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
-        minChunks: mod => mod.context && mod.context.indexOf('node_modules') !== -1,
+        minChunks: mod =>
+          mod.context && mod.context.indexOf('node_modules') !== -1,
       }),
       new webpack.optimize.CommonsChunkPlugin({
         name: 'manifest',
       }),
       new ExtractTextPlugin({
-        filename: 'styles/[name].css',
+        filename: '[hash]-[name].css',
       }),
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
@@ -220,7 +227,10 @@ call(async () => {
       }),
     ],
     resolveLoader: {
-      modules: [path.resolve(__dirname, '..', 'node_modules'), cwd('node_modules')],
+      modules: [
+        path.resolve(__dirname, '..', 'node_modules'),
+        cwd('node_modules'),
+      ],
       extensions: ['.js', '.json'],
       mainFields: ['loader', 'main'],
     },
@@ -245,9 +255,13 @@ call(async () => {
   if (options.minify) {
     console.log('Starting in minify-mode: Output will be minified.');
     WEBPACK_CONFIG.plugins.push(new UglifyJsPlugin({
-      sourceMap: (options.sourceMap) ? true : false, // eslint-disable-line
+        sourceMap: options.sourceMap ? true : false // eslint-disable-line
     }));
   }
+
+  // if (options.minify) {
+  WEBPACK_CONFIG.plugins.push(new CopyWebpackPlugin([cwd('app/public')]));
+  // }
 
   if (options.publicPath) {
     console.log('Starting in public-path-mode: ...');
@@ -270,9 +284,10 @@ call(async () => {
 
   console.log('');
 
-  const assets = await pkgAssets(process.cwd(), `${WEBPACK_CONFIG.output.path}/assets/vendor`);
-
-  assets.map(asset => console.log(`Asset(s) moved: ${logPath(asset.src)} -> ${logPath(asset.dest)}`));
+  pkgAssets(process.cwd(), `${WEBPACK_CONFIG.output.path}/assets/vendor`).then((assets) => {
+    assets.map(asset =>
+      console.log(`Asset(s) moved: ${logPath(asset.src)} -> ${logPath(asset.dest)}`));
+  });
 
   webpack(WEBPACK_CONFIG, (err, stats) => {
     if (err) throw err;
