@@ -1,65 +1,61 @@
-const fs = require('fs-extra');
+const fs = require("fs-extra");
+const program = require("commander");
 
-const program = require('commander');
+const { cwd, cwdHash, temp } = require("../lib/fs");
 
-const webpack = require('../lib/webpack');
-
-const cwd = require('../lib/cwd');
+const { requireAsync } = require("../lib/modules");
 
 program
-  .option('-t, --type <type>', "Either 'Module' or 'Instance'.")
-  // .option('-c, --clean', 'Clean old dist folder.')
-  .option('-w, --watch', 'Watch the source files for changes.')
-  .option('-s, --serve', 'Serve the dist folder.')
-  .option('-o, --open', 'Open browser if serve mode is on.')
-  .option('-m, --minify', 'Output will be minified.')
-  .option(
-    '-p, --port <port>',
-    'Define a port, if serve mode is on. Default is 8080.',
-  )
-  .option(
-    '--source-map <setting>',
-    'Define the source-map type, see webpack.js.org/configuration/devtool',
-  )
-  .option(
-    '--public-path <url>',
-    'Set a public path, see webpack.js.org/concepts/output',
-  )
+  .option("-w, --watch", "Watch the source files for changes.")
+  .option("-s, --serve", "Serve the dist folder.")
+  .option("-o, --open", "Open browser if serve mode is on.")
+  .option("-p, --port <port>", "Set a port for serve mode. Default is 8080.")
   .parse(process.argv);
 
 async function init() {
-  const DEFAULTS = {
+  const options = {
     watch: program.watch || false,
     serve: program.serve || false,
-    // clean: program.clean || false,
-    minify: program.minify || false,
     open: program.open || false,
-    port: program.port || 8080,
-    sourceMap: program.sourceMap || false,
-    publicPath: program.publicPath || false,
+    port: program.port || 8080
   };
 
-  const configPath = cwd('.opendashrc.json');
-
-  let options = {};
+  const configPath = cwd(".opendashrc.json");
 
   if (!(await fs.pathExists(configPath))) {
-    throw new Error('Not an open.DASH instance.');
+    throw new Error("Not an open.DASH instance.");
+  }
+
+  const instanceHash = cwdHash();
+
+  const Bundler = await requireAsync("parcel-bundler", "1.11.0", () => {
+    console.log("Requesting the build tool for the first time.");
+    console.log("It will download now.");
+    console.log("This might take some time.");
+  });
+
+  const bundleEntryFile = cwd("app/index.html");
+
+  const bundleConfig = {
+    outDir: cwd("dist"),
+    cache: true,
+    cacheDir: temp(instanceHash, "cache"),
+    watch: options.watch,
+    minify: !options.serve && !options.watch,
+    detailedReport: true
+  };
+
+  const bundler = new Bundler(bundleEntryFile, bundleConfig);
+
+  if (options.serve) {
+    const bundle = await bundler.serve(options.port);
+  } else {
+    const bundle = await bundler.bundle();
   }
 
   // Object.assign(options, await fs.readJson(configPath));
 
-  options.dist = options.dist || 'dist';
-  options.index = options.index || 'app/index.html';
-  options.entry = options.entry || 'app/js/app.js';
-
-  fs.writeJson(configPath, options, { spaces: 2 });
-
-  options = Object.assign({}, DEFAULTS, options);
-
-  console.log('');
-
-  await webpack(options);
+  // fs.writeJson(configPath, options, { spaces: 2 });
 }
 
 init().then(null, error => console.error(error));
