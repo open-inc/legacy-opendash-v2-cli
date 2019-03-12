@@ -10,5 +10,6 @@ program
 
   .command("init <template> <name>", "Initiate a new instance or widget.")
   .command("build", "Build an Instance or a Widget.")
+  .command("clear", "Tool to clear caches.")
 
   .parse(process.argv);
