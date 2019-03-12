@@ -28,7 +28,7 @@ async function init() {
 
   const instanceHash = cwdHash();
 
-  const Bundler = await requireAsync("parcel-bundler", "1.11.0", () => {
+  const Bundler = await requireAsync("parcel-bundler", "1.12.0", () => {
     console.log("Requesting the build tool for the first time.");
     console.log("It will download now.");
     console.log("This might take some time.");
