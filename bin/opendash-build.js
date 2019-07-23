@@ -45,6 +45,13 @@ async function init() {
     detailedReport: true
   };
 
+  if (!options.serve && !options.watch) {
+    bundleConfig.production = true;
+    process.env.NODE_ENV = process.env.NODE_ENV || "production";
+  } else {
+    process.env.NODE_ENV = process.env.NODE_ENV || "development";
+  }
+
   const bundler = new Bundler(bundleEntryFile, bundleConfig);
 
   if (options.serve) {
